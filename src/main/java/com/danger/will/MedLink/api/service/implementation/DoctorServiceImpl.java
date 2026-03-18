@@ -1,0 +1,99 @@
+package com.danger.will.MedLink.api.service.implementation;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import org.springframework.beans.BeanUtils;
+import org.springframework.stereotype.Service;
+
+import com.danger.will.MedLink.api.entity.DoctorEntity;
+import com.danger.will.MedLink.api.entity.FacilityEntity;
+import com.danger.will.MedLink.api.model.DoctorModel;
+import com.danger.will.MedLink.api.repository.DoctorRepository;
+import com.danger.will.MedLink.api.repository.FacilityRepository;
+import com.danger.will.MedLink.api.service.services.DoctorService;
+
+@Service
+public class DoctorServiceImpl implements DoctorService{
+
+    DoctorRepository doctorRepository;
+    FacilityRepository facilityRepository;
+
+    DoctorServiceImpl(DoctorRepository doctorRepository , FacilityRepository facilityRepository){
+        this.doctorRepository = doctorRepository;
+        this.facilityRepository = facilityRepository;
+    }
+
+    @Override
+    public DoctorModel addDoctor(DoctorModel doctorModel) {
+        DoctorEntity doctorEntity = new DoctorEntity();           //instance creation
+        BeanUtils.copyProperties(doctorModel, doctorEntity);      //coping properties
+
+        FacilityEntity facilityEntity = 
+            facilityRepository.findById(doctorModel.getFacilityId()).get();  //getting the facility entity
+        
+        doctorEntity.setFacility(facilityEntity);                 //adding facility object at doctorEntity
+
+        doctorRepository.save(doctorEntity);                      //saving in database
+        return doctorModel;
+    }
+
+    @Override
+    public List<DoctorModel> getAllDoctors() {
+        List<DoctorEntity> doctorEntities = doctorRepository.findAll();   //getting from db
+        List<DoctorModel> doctorModel = new ArrayList<>();                //storage
+
+        for(DoctorEntity doctorEntity : doctorEntities) {                   //to copy properties in list
+            DoctorModel tempModel = new DoctorModel();                      //storage
+            BeanUtils.copyProperties(doctorEntity, tempModel);              //copying
+
+            tempModel.setFacilityId(doctorEntity.getFacility().getId());    //manually adding facility id to model
+
+            doctorModel.add(tempModel);                                     //add
+        }
+
+        return doctorModel;
+    }
+
+    @Override
+    public DoctorModel getDoctorById(long id) {
+        DoctorEntity doctorEntity =                                 //getting the doctor entity
+            doctorRepository.findById(id)                                        
+                            .orElseThrow(()->new RuntimeException("Facility not found"));
+        
+        DoctorModel doctorModel = new DoctorModel();                //storage
+
+        BeanUtils.copyProperties(doctorEntity, doctorModel);        //coping
+
+        //manually getting the facility as it is foreign key and adding in model
+        doctorModel.setFacilityId(doctorEntity.getFacility().getId());     
+
+        return doctorModel;
+    }
+
+    @Override
+    public DoctorModel updateDoctor(long id, DoctorModel doctorModel) {
+        DoctorEntity doctorEntity = 
+                doctorRepository.findById(id)
+                                .orElseThrow(()->new RuntimeException("Record not found"));
+
+        BeanUtils.copyProperties(doctorModel, doctorEntity);
+
+        //manually adding facility entity to doctor entity's facility field as we have set it foreign key
+        doctorEntity.setFacility(facilityRepository.findById(doctorModel.getFacilityId())          
+                                                    .orElseThrow(()->new RuntimeException()));    
+
+        doctorRepository.save(doctorEntity);
+        
+        return doctorModel;
+    }
+
+    @Override
+    public Boolean deleteDoctor(long id) {
+        if (doctorRepository.existsById(id)) {       //checking if exixts
+            doctorRepository.deleteById(id);
+            return true; 
+        }
+        return false;
+    } 
+}
