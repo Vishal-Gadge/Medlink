@@ -215,3 +215,96 @@ if(validateBtn != null){
         }
     })
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+//delete doctor
+const deleteDoctorBtn = document.querySelector("#deleteDoctorBtn");
+if(deleteDoctorBtn != null){
+    deleteDoctorBtn.addEventListener("click" , async (evt) => {
+        evt.preventDefault();
+
+        
+        const number = document.querySelector("#deleteDoctorId").value;
+        const doctorName = document.querySelector("#deleteDoctorName").value;
+        const docPassword = document.querySelector("#deleteDoctorPass").value;
+
+        const deleteRes = document.querySelector("#deleteRes");
+        const finalMsg = document.querySelector("#deleteFinalMsg");
+
+
+        //check if fields empty
+        if(!number || !doctorName.trim() || !docPassword){
+            deleteRes.innerHTML = `<h2>Kindly enter credentials first.</h2>`;
+            return;
+        }
+
+        //if fields not empty
+        let response = await fetch(baseUrl+`/${number}`);
+        let result = await response.json();
+
+        //if credentials dosen't match
+        if(result.id != number || result.username != doctorName){
+            deleteRes.innerHTML = `<h2>Invalid credentials , please try again</h2><br>`;
+            return;
+        }
+
+        //if password is wrong
+        if(result.password != docPassword){
+            deleteRes.innerHTML += `<h2>Invalid Password , please try again</h2>`;
+            return;
+        }
+
+        //if credentials match 
+        //check confirmation
+        deleteRes.innerHTML = `<h4>Enter this text for confirmation :Delete -${result.username}</h4>
+                               <input type="text" placeholder="Enter the confirmation text" id="confirmation"><br>
+                               <button type="submit" id="confirmBtn">Confirm</button>`;
+
+        const confirmBtn = document.querySelector("#confirmBtn");
+        if(confirmBtn != null){
+            confirmBtn.addEventListener("click" , async (evt) => {
+                evt.preventDefault();
+                
+                const confirmation = document.querySelector("#confirmation").value;
+                //if confirmation field empty
+                if(!confirmation.trim()){
+                    finalMsg.innerHTML = `<h2>Kindly enter the text</h2>`;
+                    return;
+                }
+
+                //if confirmation invalid
+                if(confirmation != `Delete -${result.username}`){
+                    finalMsg.innerHTML = `<h2>Entered text is invalid, try again carefully</h2>`;
+                    return;
+                }
+
+                //if confirmation valid
+                let response = await fetch(baseUrl+`/delete/${number}`,{
+                    method : "DELETE",
+                    headers:{"Content-Type":"application/json"}
+                });
+
+                //if error occurs
+                if(response.status != 200){
+                    finalMsg.innerHTML = `<h2>Error occured during deletion with status code: ${response.status}<br>
+                                    The Doctor you are trying to delete is trying to diagnos patients or is in referral</h2>`;
+                    return;
+                }
+                
+                //if all clear
+                finalMsg.innerHTML = `<h2>The Doctor Record has been deleted successfully</h2>`;
+            })
+        }
+    })
+}

@@ -237,3 +237,76 @@ if(validateBtn != null){
 
 
 //delete Facility
+const deleteFacilityBtn = document.querySelector("#deleteFacilityBtn");
+if(deleteFacilityBtn != null){
+    deleteFacilityBtn.addEventListener("click" , async (evt) => {
+        evt.preventDefault();
+
+        
+        const number = document.querySelector("#deleteFacilityId").value;
+        const facilityName = document.querySelector("#deleteFacilityName").value;
+
+        const deleteRes = document.querySelector("#deleteRes");
+        const finalMsg = document.querySelector("#deleteFinalMsg");
+
+
+        //check if fields empty
+        if(!number || !facilityName.trim()){
+            deleteRes.innerHTML = `<h2>Kindly enter credentials first.</h2>`;
+            return;
+        }
+
+        //if fields not empty
+        let response = await fetch(baseUrl+`/${number}`);
+        let result = await response.json();
+
+        //if credentials dosen't match
+        if(result.id != number || result.name != facilityName){
+            deleteRes.innerHTML = `<h2>Invalid credentials , please try again</h2>`;
+            return;
+        }
+
+        //if credentials match 
+        //check confirmation
+        deleteRes.innerHTML = `<h4>Enter this text :Delete -${result.name}</h4>
+                               <input type="text" placeholder="Enter the above text" id="confirmation"><br>
+                               <button type="submit" id="confirmBtn">Confirm</button>`;
+
+        const confirmBtn = document.querySelector("#confirmBtn");
+        if(confirmBtn != null){
+            confirmBtn.addEventListener("click" , async (evt) => {
+                evt.preventDefault();
+                
+                const confirmation = document.querySelector("#confirmation").value;
+                //if confirmation empty
+                if(!confirmation.trim()){
+                    finalMsg.innerHTML = `<h2>Kindly enter the text</h2>`;
+                    return;
+                }
+
+                //if confirmation invalid
+                if(confirmation != `Delete -${result.name}`){
+                    finalMsg.innerHTML = `<h2>Entered text is invalid, try again carefully</h2>`;
+                    return;
+                }
+
+                //if confirmation valid
+                let response = await fetch(baseUrl+`/delete/${number}`,{
+                    method : "DELETE",
+                    headers:{"Content-Type":"application/json"}
+                });
+
+                //if error occurs
+                if(response.status != 200){
+                    finalMsg.innerHTML = `<h2>Error occured during deletion with status code: ${response.status}<br>
+                                    The Facility you are trying to delete is being used by patients or doctors</h2>`;
+                    return;
+                }
+                
+                //if all clear
+                finalMsg.innerHTML = `<h2>The Facility Record has been deleted successfully</h2>`;
+            })
+        }
+
+    })
+}
