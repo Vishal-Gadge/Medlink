@@ -19,7 +19,7 @@ addBtn.addEventListener("click" , async (evt)=>{
 
     if(!referral.diagnosis.trim() || !referral.status.trim() || !referral.patientId || !referral.facilityId || 
                                      !referral.referringDoctorId || !referral.receivingDoctorId){
-        addRes.innerHTML = `<h2>Facility cannot be added as fields are empty</h2>`;
+        addRes.innerHTML = `<h2 class="failure">Facility cannot be added as fields are empty</h2>`;
         return;
     }
 
@@ -30,11 +30,11 @@ addBtn.addEventListener("click" , async (evt)=>{
         body:JSON.stringify(referral)
     })
 
-    if(response.status != 200){
-        addRes.innerHTML = `<h2>Error has occurred with status code: ${response.status}</h2>`;
+    if(!response.ok){
+        addRes.innerHTML = `<h2 class="failure">Error has occurred with status code: ${response.status}</h2>`;
         return;
     }
-    addRes.innerHTML = `<h2>Referral has been added of Patient Id: ${referral.patientId}</h2>`;
+    addRes.innerHTML = `<h2 class="success">Referral has been added of Patient Id: ${referral.patientId}</h2>`;
 })
 }
 
@@ -105,15 +105,15 @@ if(getIdBtn != null){
                 let getRes = document.querySelector("#getRes");
 
                 if(!drId){
-                    getRes.innerHTML = `<h2>Kindly Enter Id first</h2>`;
+                    getRes.innerHTML = `<h2 class="failure">Kindly Enter Id first</h2>`;
                     return;
                 }
 
                 let response = await fetch(baseUrl + `/${drId}`);
                 let result = await response.json();
 
-                if(response.status != 200){
-                    getRes.innerHTML = `<h3>Error occured with status code: ${response.status} 
+                if(!response.ok){
+                    getRes.innerHTML = `<h3 class="failure">Error occured with status code: ${response.status} 
                                         or id was not found</h3>`;
                     return;
                 }
@@ -169,7 +169,7 @@ if(validateBtn != null){
 
         //if input empty
         if(!patId || !refId){
-            updateRes.innerHTML = `<h2>Cannot Update Referral without entering Credentials</h2>`;
+            updateRes.innerHTML = `<h2 class="failure">Cannot Update Referral without entering Credentials</h2>`;
             return;
         }
 
@@ -179,12 +179,12 @@ if(validateBtn != null){
 
         //if credentials dosen't match
         if(result.id != refId || result.patientId != patId){
-            updateRes.innerHTML = `<h2>Referral Id or Patient Id is wrong! Please try again</h2>`;
+            updateRes.innerHTML = `<h2 class="failure">Referral Id or Patient Id is wrong! Please try again</h2>`;
             return;
         }
 
         //if valid credentials
-        updateContainer.innerHTML = `<h3>Now Enter Details which you want to Update for Referral Id: ${refId}</h3>`;
+        updateContainer.innerHTML = `<h3 class="success">Now Enter Details which you want to Update for Referral Id: ${refId}</h3>`;
         updateRes.innerHTML = `
         <form id="referralForm">
             <input type="number" placeholder="Patient Id" id="updatePatientId"><br>
@@ -204,6 +204,7 @@ if(validateBtn != null){
 
             
             let updatedReferral = {
+                id : refId,
                 patientId : document.querySelector("#updatePatientId").value,
                 facilityId : document.querySelector("#updateFacilityId").value,
                 referringDoctorId : document.querySelector("#upReferringDoctorId").value,
@@ -218,28 +219,28 @@ if(validateBtn != null){
             if(!updatedReferral.patientId || !updatedReferral.facilityId || !updatedReferral.referringDoctorId || 
                 !updatedReferral.receivingDoctorId || !updatedReferral.diagnosis.trim() || !updatedReferral.status.trim()){
        
-                        finalMsg.innerHTML = `<h2>Kindly Enter Details to update</h2>`;
+                        finalMsg.innerHTML = `<h2 class="failure">Kindly Enter Details to update</h2>`;
                         return;
             }
 
             //send data if all clear
-            let response = await fetch(baseUrl+"/add" , {
-                method : "POST" , 
+            let response = await fetch(baseUrl+`/update/${refId}` , {
+                method : "PUT" , 
                 headers : {"Content-Type":"application/json"} ,
                 body : JSON.stringify(updatedReferral)
             })
 
             //checking if all is well sended
             //if error occured
-            if(response.status != 200){
-                finalMsg.innerHTML = `<h2>Error occured with status code: ${response.status} while updating Referral!</h2>`;
+            if(!response.ok){
+                finalMsg.innerHTML = `<h2 class="failure">Error occured with status code: ${response.status} while updating Referral!</h2>`;
                 return;
             }
 
             //if updated successfully
-            finalMsg.innerHTML = `<h2>Referral has been updated Successfully :) </h2><br>`;
+            finalMsg.innerHTML = `<h2 class="success">Referral has been updated Successfully :) </h2><br>`;
 
-            finalMsg.innerHTML += `<h3>Check out Updated Referral here: </h3> 
+            finalMsg.innerHTML += `<h3 class="success">Check out Updated Referral here: </h3> 
                                     <a href="/html/getData/referral.html">Get Referral</a>`;
         })
         }
@@ -279,7 +280,7 @@ if(deleteReferralBtn != null){
 
         //check if fields empty
         if(!referralId || !patientId){
-            deleteRes.innerHTML = `<h2>Kindly enter credentials first.</h2>`;
+            deleteRes.innerHTML = `<h2 class="failure">Kindly enter credentials first.</h2>`;
             return;
         }
 
@@ -289,13 +290,13 @@ if(deleteReferralBtn != null){
 
         //if credentials dosen't match
         if(result.id != referralId || result.patientId != patientId){
-            deleteRes.innerHTML = `<h2>Invalid credentials , please try again</h2>`;
+            deleteRes.innerHTML = `<h2 class="failure">Invalid credentials , please try again</h2>`;
             return;
         }
 
         //if credentials match 
         //check confirmation
-        deleteRes.innerHTML = `<h4>Enter this text for condirmation :Delete -${result.patientId}</h4>
+        deleteRes.innerHTML = `<h4 class="success">Enter this text for condirmation :Delete -${result.patientId}</h4>
                                <input type="text" placeholder="Enter the confirmation text" id="confirmation"><br>
                                <button type="submit" id="confirmBtn">Confirm</button>`;
 
@@ -307,13 +308,13 @@ if(deleteReferralBtn != null){
                 const confirmation = document.querySelector("#confirmation").value;
                 //if confirmation empty
                 if(!confirmation.trim()){
-                    finalMsg.innerHTML = `<h2>Kindly enter the text</h2>`;
+                    finalMsg.innerHTML = `<h2 class="failure">Kindly enter the text</h2>`;
                     return;
                 }
 
                 //if confirmation invalid
                 if(confirmation != `Delete -${result.patientId}`){
-                    finalMsg.innerHTML = `<h2>Entered text is invalid, try again carefully</h2>`;
+                    finalMsg.innerHTML = `<h2 class="failure">Entered text is invalid, try again carefully</h2>`;
                     return;
                 }
 
@@ -324,14 +325,14 @@ if(deleteReferralBtn != null){
                 });
 
                 //if error occurs
-                if(response.status != 200){
-                    finalMsg.innerHTML = `<h2>Error occured during deletion with status code: ${response.status}<br>
+                if(!response.ok){
+                    finalMsg.innerHTML = `<h2 class="failure">Error occured during deletion with status code: ${response.status}<br>
                                     The Referral you are trying to delete is being used by patients, doctors or facilities</h2>`;
                     return;
                 }
                 
                 //if all clear
-                finalMsg.innerHTML = `<h2>The Referral Record has been deleted successfully</h2>`;
+                finalMsg.innerHTML = `<h2 class="success">The Referral Record has been deleted successfully</h2>`;
             })
         }
 
