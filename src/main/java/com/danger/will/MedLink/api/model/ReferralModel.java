@@ -11,5 +11,4 @@ public class ReferralModel {
     private long receivingDoctorId;         
     private String diagnosis;
     private String status;
-    
 }

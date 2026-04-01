@@ -1,5 +1,35 @@
 const baseUrl = "http://localhost:2000/api/facility";
 
+//utility
+//method to fetch url endpoint and gets response
+const getResponse = async (url , methOd , object)=>{
+    return response = await fetch(url , {
+        method : `${methOd}`,
+        headers : {"Content-Type":"application/json"},
+        body : JSON.stringify(object)
+    })
+}
+
+//method to fetch url endpoint and gets response
+const deleteResponse = (url)=>{
+    return response = fetch(url , {
+        method : "DELETE",
+        headers : {"Content-Type":"application/json"}
+    })
+}
+
+//method to check input value is not empty
+const isEmpty = (...input) => {
+    input.forEach(element => {
+        if(element.trim()){
+            return true;
+        }
+    });
+    return false;
+}
+
+
+
 //adding facility to database
 const addBtn = document.querySelector("#addBtn");
 let addRes = document.querySelector("#addRes");
@@ -18,12 +48,18 @@ addBtn.addEventListener("click" , async (evt)=>{
         addRes.innerHTML = `<h2 class="failure">Facility cannot be added as fields are empty</h2>`;
         return;
     }
+    // if(isEmpty(facility.name , facility.type , facility.address)){
+    //      addRes.innerHTML = `<h2 class="failure">Facility cannot be added as fields are empty</h2>`;
+    //      return;
+    // }
 
     let response = await fetch(baseUrl+"/add" , {
         method:"POST", 
         headers:{"Content-Type":"application/json"},
         body:JSON.stringify(facility)
     })
+
+    // let response = getResponse(baseUrl+"/add" , "POST" , facility);
 
     if(!response.ok){
         addRes.innerHTML = `<h2 class="failure">Error has occurred with status code: ${response.status}</h2>`;
