@@ -22,8 +22,8 @@ public class ReferralEntity {
     private PatientEntity patient;          //foreign key
 
     @ManyToOne
-    @JoinColumn(name = "facilityId")
-    private FacilityEntity facility;     //where the patient coming from
+    @JoinColumn(name = "healthcareCenterId")
+    private HealthcareCenterEntity healthcareCenter;     //where the patient coming from
 
     @ManyToOne
     @JoinColumn(name = "referringDoctorId")
@@ -39,7 +39,7 @@ public class ReferralEntity {
 
 // {
 //         "patientId":1,
-//         "facilityId":3,
+//         "healthcareCenterId":3,
 //         "referringDoctorId":1,
 //         "receivingDoctorId":2,
 //         "diagnosis":"going to die soon",

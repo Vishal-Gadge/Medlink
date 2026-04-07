@@ -4,7 +4,7 @@
     <title>Add Doctor</title>
     <link rel="stylesheet" href="/css/style.css">
 </head>
-<body>
+<body class="addDoctor">
 
 <h1>Add Doctor</h1>
 
@@ -12,13 +12,22 @@
     <input type="text" placeholder="Name" id="name"><br>
     <input type="text" placeholder="Username" id="username"><br>
     <input type="password" placeholder="Password " id="password"><br>
-    <input type="text" placeholder="Role" id="role"><br>
-    <input type="number" placeholder="Facility Id" id="facilityId"><br>
+
+    <label for="role">Role</label><br>
+    <select name="role" id="role">
+        <option value="General Physician">General Physician</option>
+        <option value="Specialist">Specialist</option>
+        <option value="Surgeon">Surgeon</option>
+        <option value="Consultant">Consultant</option>
+        <option value="Admin Doctor">Admin Doctor</option>
+    </select><br>
+
+    <input type="number" placeholder="HealthcareCenter Id" id="healthcareCenterId"><br>
     <button type="submit" id="addBtn">Add Doctor</button>
 </form>
 
 <div id="addRes"></div>
 
-<script src="/js/doctor.js"></script>
+<script type="module" src="/js/doctor.js"></script>
 </body>
 </html>

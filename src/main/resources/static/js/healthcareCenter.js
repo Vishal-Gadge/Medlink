@@ -1,71 +1,40 @@
-const baseUrl = "http://localhost:2000/api/facility";
-
-//utility
-//method to fetch url endpoint and gets response
-const getResponse = async (url , methOd , object)=>{
-    return response = await fetch(url , {
-        method : `${methOd}`,
-        headers : {"Content-Type":"application/json"},
-        body : JSON.stringify(object)
-    })
-}
-
-//method to fetch url endpoint and gets response
-const deleteResponse = (url)=>{
-    return response = fetch(url , {
-        method : "DELETE",
-        headers : {"Content-Type":"application/json"}
-    })
-}
-
-//method to check input value is not empty
-const isEmpty = (...input) => {
-    input.forEach(element => {
-        if(element.trim()){
-            return true;
-        }
-    });
-    return false;
-}
+import { isValidName } from "./utility.js";
+const baseUrl = "http://localhost:2000/api/healthcareCenter";
 
 
-
-//adding facility to database
+//adding healthcareCenter to database
 const addBtn = document.querySelector("#addBtn");
-let addRes = document.querySelector("#addRes");
+const addRes = document.querySelector("#addRes");
 
 if(addBtn != null){
 addBtn.addEventListener("click" , async (evt)=>{
     evt.preventDefault();
 
-    let facility = {
+    let healthcareCenter = {
         name : document.querySelector("#name").value,
-        type : document.querySelector("#type").value,
+        type : document.querySelector("#healthCareType").value,
         address : document.querySelector("#location").value
     }
 
-    if(!facility.name.trim() || !facility.type.trim() || !facility.address.trim()){
-        addRes.innerHTML = `<h2 class="failure">Facility cannot be added as fields are empty</h2>`;
+    if(!healthcareCenter.name.trim() || !healthcareCenter.type.trim() || !healthcareCenter.address.trim()){
+        addRes.innerHTML = `<h2 class="failure">HealthcareCenter cannot be added as fields are empty</h2>`;
+        return;
+    }else if(!isValidName(healthcareCenter.name)){
+        addRes.innerHTML = `<h2 class="failure">Name should not contain numbers or special characters</h2>`;
         return;
     }
-    // if(isEmpty(facility.name , facility.type , facility.address)){
-    //      addRes.innerHTML = `<h2 class="failure">Facility cannot be added as fields are empty</h2>`;
-    //      return;
-    // }
 
     let response = await fetch(baseUrl+"/add" , {
         method:"POST", 
         headers:{"Content-Type":"application/json"},
-        body:JSON.stringify(facility)
+        body:JSON.stringify(healthcareCenter)
     })
-
-    // let response = getResponse(baseUrl+"/add" , "POST" , facility);
 
     if(!response.ok){
         addRes.innerHTML = `<h2 class="failure">Error has occurred with status code: ${response.status}</h2>`;
         return;
     }
-    addRes.innerHTML = `<h2 class="success">Facility by name: ${facility.name} has been added</h2>`;
+    addRes.innerHTML = `<h2 class="success">HealthcareCenter by name: ${healthcareCenter.name} has been added</h2>`;
 })
 }
 
@@ -78,12 +47,12 @@ addBtn.addEventListener("click" , async (evt)=>{
 
 
 
-//getting facility
+//getting healthcareCenter
 const getAllBtn = document.querySelector("#getAllBtn");
 const getIdBtn = document.querySelector("#getIdBtn");
-let table = document.querySelector("#facilityTable");
+let table = document.querySelector("#healthcareCenterTable");
 
-//all Facilities
+//all Healthcare centers
 if(getAllBtn != null){
 getAllBtn.addEventListener("click", async(evt) => {
     evt.preventDefault();
@@ -117,13 +86,13 @@ if(getIdBtn != null){
         evt.preventDefault();
         
         const container = document.querySelector("#getContainer");
-        container.innerHTML = `<input type="number" placeholder="Enter Facility Id" id="drId" 
+        container.innerHTML = `<input type="number" placeholder="Enter HealthcareCenter Id" id="drId" 
                                         style : {padding:5px}> <br> <br>              
-                                <button id="getFacilityBtn">Search</button>`;
+                                <button id="getHealthcareCenterBtn">Search</button>`;
 
-        const getFacilityBtn = document.querySelector("#getFacilityBtn");
-        if(getFacilityBtn != null){
-            getFacilityBtn.addEventListener("click" , async (evt) => {
+        const getHealthcareCenterBtn = document.querySelector("#getHealthcareCenterBtn");
+        if(getHealthcareCenterBtn != null){
+            getHealthcareCenterBtn.addEventListener("click" , async (evt) => {
                 evt.preventDefault();
 
                 let drId = document.querySelector("#drId").value;
@@ -172,42 +141,52 @@ if(getIdBtn != null){
 
 
 
-//update facility
+//update healthcareCenter
 //update = get by id + add new (get + post)
-const validateBtn = document.querySelector("#checkUpdateFacilityBtn");
+const validateBtn = document.querySelector("#checkUpdateHealthcareCenterBtn");
 if(validateBtn != null){
     validateBtn.addEventListener("click" , async (evt) => {
         evt.preventDefault();
 
-        const facId = document.querySelector("#updateFacilityId").value;
-        const facName = document.querySelector("#updateFacilityName").value;
-        const updateContainer = document.querySelector("#updateFacilityContainer");
+        const centerId = document.querySelector("#updateHealthcareCenterId").value;
+        const centerName = document.querySelector("#updateHealthcareCenterName").value;
+        const updateContainer = document.querySelector("#updateHealthcareCenterContainer");
         const updateRes = document.querySelector("#updateRes");
 
         //if input empty
-        if(!facId || !facName.trim()){
-            updateRes.innerHTML = `<h2 class="failure">Cannot Update Facility without entering Credentials</h2>`;
+        if(!centerId || !centerName.trim()){
+            updateRes.innerHTML = `<h2 class="failure">Cannot Update HealthcareCenter without entering Credentials</h2>`;
             return;
         }
 
         //if input not empty
-        let response = await fetch(baseUrl+`/${facId}`);
+        let response = await fetch(baseUrl+`/${centerId}`);
         let result = await response.json();
 
         //if credentials dosen't match
-        if(result.id != facId || result.name != facName){
-            updateRes.innerHTML = `<h2 class="failure">Facility Id or Name is wrong! Please try again</h2>`;
+        if(result.id != centerId || result.name != centerName){
+            updateRes.innerHTML = `<h2 class="failure">HealthcareCenter Id or Name is wrong! Please try again</h2>`;
             return;
         }
 
         //if valid credentials
-        updateContainer.innerHTML = `<h3 class="success">Now Enter Details which you want to Update for Facility Id: ${facId}</h3>`;
+        updateContainer.innerHTML = `<h3 class="success">Now Enter Details which you want to Update for HealthcareCenter Id: ${centerId}</h3>`;
         updateRes.innerHTML = `
-        <form id="facilityForm">
+        <form id="healthcareCenterForm">
             <input type="text" placeholder="Name" id="name"><br>
-            <input type="text" placeholder="Type" id="type">
+
+            <div class="labelBox">
+            <label for="type">Type:</label>
+            <select name="type" id="healthCareType">
+                <option value="Hospital">Hospital</option>
+                <option value="Clinic">Clinic</option>
+                <option value="Diagnostic Center">Diagnostic Center</option>
+                <option value="Medical College">Medical College</option>
+            </select>
+            </div>
+            
             <input type="text" placeholder="Location" id="location"><br>
-            <button type="submit" id="addBtn">Update Facility</button>
+            <button type="submit" id="addBtn">Update HealthcareCenter</button>
         </form>`;
 
         //taking new input
@@ -217,42 +196,45 @@ if(validateBtn != null){
             evt.preventDefault();
 
             
-            let updatedFacility = {
-                id : facId,
+            let updatedHealthcareCenter = {
+                id : centerId,
                 name : document.querySelector("#name").value,
-                type : document.querySelector("#type").value,
+                type : document.querySelector("#healthCareType").value,
                 address : document.querySelector("#location").value
             }
 
             const finalMsg = document.querySelector("#finalMsg");
 
             //checking if null
-            if(!updatedFacility.name.trim() || !updatedFacility.type.trim() || 
-                    !updatedFacility.address.trim()){
+            if(!updatedHealthcareCenter.name.trim() || !updatedHealthcareCenter.type.trim() || 
+                    !updatedHealthcareCenter.address.trim()){
        
                         finalMsg.innerHTML = `<h2 class="failure">Kindly Enter Details to update</h2>`;
                         return;
+            }else if(!isValidName(updatedHealthcareCenter.name)){
+                    finalMsg.innerHTML = `<h2 class="failure">Name should not contain numbers or special characters</h2>`;
+                    return;                
             }
 
             //update data if all clear
-            let response = await fetch(baseUrl+`/update/${facId}` , {
+            let response = await fetch(baseUrl+`/update/${centerId}` , {
                 method : "PUT" , 
                 headers : {"Content-Type":"application/json"} ,
-                body : JSON.stringify(updatedFacility)
+                body : JSON.stringify(updatedHealthcareCenter)
             })
 
             //checking if all is well sended
             //if error occured
             if(!response.ok){
-                finalMsg.innerHTML = `<h2 class="failure">Error occured with status code: ${response.status} while updating Facility!</h2>`;
+                finalMsg.innerHTML = `<h2 class="failure">Error occured with status code: ${response.status} while updating HealthcareCenter!</h2>`;
                 return;
             }
 
             //if updated successfully
-            finalMsg.innerHTML = `<h2 class="success">Facility has been updated Successfully :) </h2><br>`;
+            finalMsg.innerHTML = `<h2 class="success">HealthcareCenter has been updated Successfully :) </h2><br>`;
 
-            finalMsg.innerHTML += `<h3 class="success">Check out Updated Facility here: </h3> 
-                                    <a href="/html/getData/facility.html">Get Facility</a>`;
+            finalMsg.innerHTML += `<h3 class="success">Check out Updated HealthcareCenter here: </h3> 
+                                    <a href="/html/getData/healthcareCenter.html">Get HealthcareCenter</a>`;
         })
         }
     })
@@ -273,22 +255,22 @@ if(validateBtn != null){
 
 
 
-//delete Facility
-const deleteFacilityBtn = document.querySelector("#deleteFacilityBtn");
-if(deleteFacilityBtn != null){
-    deleteFacilityBtn.addEventListener("click" , async (evt) => {
+//delete HealthcareCenter
+const deleteHealthcareCenterBtn = document.querySelector("#deleteHealthcareCenterBtn");
+if(deleteHealthcareCenterBtn != null){
+    deleteHealthcareCenterBtn.addEventListener("click" , async (evt) => {
         evt.preventDefault();
 
         
-        const number = document.querySelector("#deleteFacilityId").value;
-        const facilityName = document.querySelector("#deleteFacilityName").value;
+        const number = document.querySelector("#deleteHealthcareCenterId").value;
+        const healthcareCenterName = document.querySelector("#deleteHealthcareCenterName").value;
 
         const deleteRes = document.querySelector("#deleteRes");
         const finalMsg = document.querySelector("#deleteFinalMsg");
 
 
         //check if fields empty
-        if(!number || !facilityName.trim()){
+        if(!number || !healthcareCenterName.trim()){
             deleteRes.innerHTML = `<h2 class="failure">Kindly enter credentials first.</h2>`;
             return;
         }
@@ -298,7 +280,7 @@ if(deleteFacilityBtn != null){
         let result = await response.json();
 
         //if credentials dosen't match
-        if(result.id != number || result.name != facilityName){
+        if(result.id != number || result.name != healthcareCenterName){
             deleteRes.innerHTML = `<h2 class="failure">Invalid credentials , please try again</h2>`;
             return;
         }
@@ -336,12 +318,12 @@ if(deleteFacilityBtn != null){
                 //if error occurs
                 if(!response.ok){
                     finalMsg.innerHTML = `<h2 class="failure">Error occured during deletion with status code: ${response.status}<br>
-                                    The Facility you are trying to delete is being used by patients or doctors</h2>`;
+                                    The HealthcareCenter you are trying to delete is being used by patients or doctors</h2>`;
                     return;
                 }
                 
                 //if all clear
-                finalMsg.innerHTML = `<h2 class="success">The Facility Record has been deleted successfully</h2>`;
+                finalMsg.innerHTML = `<h2 class="success">The HealthcareCenter Record has been deleted successfully</h2>`;
             })
         }
     })

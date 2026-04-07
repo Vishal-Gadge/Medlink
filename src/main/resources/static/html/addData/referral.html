@@ -4,23 +4,32 @@
     <title>Create Referral</title>
     <link rel="stylesheet" href="/css/style.css">
 </head>
-<body>
+<body class="addReferral">
 
 <h1>Create Referral</h1>
 
 <form id="referralForm">
     <input type="number" placeholder="Patient ID" id="patientId"><br>
-    <input type="number" placeholder="Facility ID" id="facilityId"><br>
+    <input type="number" placeholder="HealthcareCenter ID" id="healthcareCenterId"><br>
     <input type="number" placeholder="Referring Doctor ID" id="refDrId"><br>
     <input type="number" placeholder="Receiving Doctor ID" id="recDrId"><br>
     <input type="text" placeholder="Diagnosis" id="diagnosis"><br>
-    <input type="text" placeholder="Status" id="status"><br>
+
+    <label for="status">Patient Status : </label>
+    <select name="status" id="status">
+        <option value="Pending">Pending</option>
+        <option value="Approved">Approved</option>
+        <option value="In Progress">In Progress</option>
+        <option value="Completed">Completed</option>
+        <option value="Rejected">Rejected</option>
+    </select>
+    
     <button type="submit" id="addBtn">Create Referral</button>
 </form>
 
 <div id="addRes"></div>
 
 </div>
-<script src="/js/referral.js"></script>
+<script type="module" src="/js/referral.js"></script>
 </body>
 </html>

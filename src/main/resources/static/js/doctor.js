@@ -1,3 +1,4 @@
+import { isValidName } from "./utility.js";
 const baseUrl = "http://localhost:2000/api/doctor";
 
 //adding doctor to database
@@ -13,12 +14,15 @@ addBtn.addEventListener("click" , async (evt)=>{
         username : document.querySelector("#username").value,
         password : document.querySelector("#password").value,
         role : document.querySelector("#role").value,
-        facilityId : document.querySelector("#facilityId").value
+        healthcareCenterId : document.querySelector("#healthcareCenterId").value
     }
 
     if(!doctor.name.trim() || !doctor.username.trim() || !doctor.password || 
-        !doctor.role.trim() || !doctor.facilityId){
+        !doctor.role.trim() || !doctor.healthcareCenterId){
         addRes.innerHTML = `<h2 class="failure">Doctor cannot be added as fields are empty</h2>`;
+        return;
+    }else if(!isValidName(doctor.name)){
+        addRes.innerHTML = `<h2 class="failure">Name should not contain numbers or special characters</h2>`;
         return;
     }
 
@@ -56,7 +60,7 @@ getAllBtn.addEventListener("click", async(evt) => {
                             <th>Id</th>
                             <th>Name</th>
                             <th>Role</th>
-                            <th>Facility Id</th>
+                            <th>HealthcareCenter Id</th>
                         </tr>`
 
     result.forEach(element => {        
@@ -64,7 +68,7 @@ getAllBtn.addEventListener("click", async(evt) => {
                                 <td>${element.id}</td>
                                 <td>${element.name}</td>
                                 <td>${element.role}</td>
-                                <td>${element.facilityId}</td>
+                                <td>${element.healthcareCenterId}</td>
                             </tr>`
     });
 })
@@ -108,13 +112,13 @@ if(getIdBtn != null){
                                         <th>Id</th>
                                         <th>Name</th>
                                         <th>Role</th>
-                                        <th>Facility Id</th>
+                                        <th>HealthcareCenter Id</th>
                                     </tr>
                                     <tr>
                                         <td>${result.id}</td>
                                         <td>${result.name}</td>
                                         <td>${result.role}</td>
-                                        <td>${result.facilityId}</td>
+                                        <td>${result.healthcareCenterId}</td>
                                     </tr>
                             </table>`;              
             })
@@ -162,8 +166,18 @@ if(validateBtn != null){
             <input type="text" placeholder="Name" id="name"><br>
             <input type="text" placeholder="Username" id="username"><br>
             <input type="text" placeholder="Password" id="password"><br>
-            <input type="text" placeholder="Role" id="role"><br>
-            <input type="number" placeholder="Facility Id" id="facilityId"><br>
+            
+        <div class="labelBox">
+        <label for="role">Role</label>
+        <select name="role" id="role">
+            <option value="General Physician">General Physician</option>
+            <option value="Specialist">Specialist</option>
+            <option value="Surgeon">Surgeon</option>
+            <option value="Consultant">Consultant</option>
+            <option value="Admin Doctor">Admin Doctor</option>
+        </select><br>
+        </div>
+            <input type="number" placeholder="HealthcareCenter Id" id="healthcareCenterId"><br>
             <button type="submit" id="addBtn">Update Doctor</button>
         </form>`;
 
@@ -179,17 +193,20 @@ if(validateBtn != null){
                 username : document.querySelector("#username").value,
                 password : document.querySelector("#password").value,
                 role : document.querySelector("#role").value,
-                facilityId : document.querySelector("#facilityId").value
+                healthcareCenterId : document.querySelector("#healthcareCenterId").value
             }
 
             const finalMsg = document.querySelector("#finalMsg");
 
             //checking if null
             if(!updatedDoctor.name.trim() || !updatedDoctor.username.trim() || !updatedDoctor.password || 
-                !updatedDoctor.role.trim() || !updatedDoctor.facilityId){
+                !updatedDoctor.role.trim() || !updatedDoctor.healthcareCenterId){
        
                         finalMsg.innerHTML = `<h2 class="failure">Kindly Enter Details to update</h2>`;
                         return;
+            }else if(!isValidName(updatedDoctor.name)){
+                addRes.innerHTML = `<h2 class="failure">Name should not contain numbers or special characters</h2>`;
+                return;
             }
 
             //send data if all clear

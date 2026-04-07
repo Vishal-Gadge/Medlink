@@ -7,21 +7,21 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 
 import com.danger.will.MedLink.api.entity.DoctorEntity;
-import com.danger.will.MedLink.api.entity.FacilityEntity;
+import com.danger.will.MedLink.api.entity.HealthcareCenterEntity;
 import com.danger.will.MedLink.api.model.DoctorModel;
 import com.danger.will.MedLink.api.repository.DoctorRepository;
-import com.danger.will.MedLink.api.repository.FacilityRepository;
+import com.danger.will.MedLink.api.repository.HealthcareCenterRepository;
 import com.danger.will.MedLink.api.service.services.DoctorService;
 
 @Service
 public class DoctorServiceImpl implements DoctorService{
 
     DoctorRepository doctorRepository;
-    FacilityRepository facilityRepository;
+    HealthcareCenterRepository healthcareCenterRepository;
 
-    DoctorServiceImpl(DoctorRepository doctorRepository , FacilityRepository facilityRepository){
+    DoctorServiceImpl(DoctorRepository doctorRepository , HealthcareCenterRepository healthcareCenterRepository){
         this.doctorRepository = doctorRepository;
-        this.facilityRepository = facilityRepository;
+        this.healthcareCenterRepository = healthcareCenterRepository;
     }
 
     @Override
@@ -29,10 +29,10 @@ public class DoctorServiceImpl implements DoctorService{
         DoctorEntity doctorEntity = new DoctorEntity();           //instance creation
         BeanUtils.copyProperties(doctorModel, doctorEntity);      //coping properties
 
-        FacilityEntity facilityEntity = 
-            facilityRepository.findById(doctorModel.getFacilityId()).get();  //getting the facility entity
+        HealthcareCenterEntity healthcareCenterEntity = 
+            healthcareCenterRepository.findById(doctorModel.getHealthcareCenterId()).get();  //getting the healthcareCenter entity
         
-        doctorEntity.setFacility(facilityEntity);                 //adding facility object at doctorEntity
+        doctorEntity.setHealthcareCenter(healthcareCenterEntity);                 //adding healthcareCenter object at doctorEntity
 
         doctorRepository.save(doctorEntity);                      //saving in database
         return doctorModel;
@@ -47,7 +47,7 @@ public class DoctorServiceImpl implements DoctorService{
             DoctorModel tempModel = new DoctorModel();                      //storage
             BeanUtils.copyProperties(doctorEntity, tempModel);              //copying
 
-            tempModel.setFacilityId(doctorEntity.getFacility().getId());    //manually adding facility id to model
+            tempModel.setHealthcareCenterId(doctorEntity.getHealthcareCenter().getId());    //manually adding healthcareCenter id to model
 
             doctorModel.add(tempModel);                                     //add
         }
@@ -59,14 +59,14 @@ public class DoctorServiceImpl implements DoctorService{
     public DoctorModel getDoctorById(long id) {
         DoctorEntity doctorEntity =                                 //getting the doctor entity
             doctorRepository.findById(id)                                        
-                            .orElseThrow(()->new RuntimeException("Facility not found"));
+                            .orElseThrow(()->new RuntimeException("HealthcareCenter not found"));
         
         DoctorModel doctorModel = new DoctorModel();                //storage
 
         BeanUtils.copyProperties(doctorEntity, doctorModel);        //coping
 
-        //manually getting the facility as it is foreign key and adding in model
-        doctorModel.setFacilityId(doctorEntity.getFacility().getId());     
+        //manually getting the healthcareCenter as it is foreign key and adding in model
+        doctorModel.setHealthcareCenterId(doctorEntity.getHealthcareCenter().getId());     
 
         return doctorModel;
     }
@@ -79,8 +79,8 @@ public class DoctorServiceImpl implements DoctorService{
 
         BeanUtils.copyProperties(doctorModel, doctorEntity);
 
-        //manually adding facility entity to doctor entity's facility field as we have set it foreign key
-        doctorEntity.setFacility(facilityRepository.findById(doctorModel.getFacilityId())          
+        //manually adding healthcareCenter entity to doctor entity's healthcareCenter field as we have set it foreign key
+        doctorEntity.setHealthcareCenter(healthcareCenterRepository.findById(doctorModel.getHealthcareCenterId())          
                                                     .orElseThrow(()->new RuntimeException()));    
 
         doctorRepository.save(doctorEntity);

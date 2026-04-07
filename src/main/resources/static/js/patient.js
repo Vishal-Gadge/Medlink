@@ -1,3 +1,4 @@
+import { isValidName } from "./utility.js";
 const baseUrl = "http://localhost:2000/api/patient";
 
 //adding patient into database
@@ -17,22 +18,23 @@ btn.addEventListener("click"  , async (evt) => {
 
     if(!patient.username.trim() || !patient.dateOfBirth || !patient.gender.trim() || !patient.contactNumber.trim()){
         res.innerHTML = `<h2 class="failure">Patient cannot be added as fields are empty</h2>`;
+        return;
+    }
+
+    let response = await fetch(baseUrl+"/add",{
+        method:"POST",     
+        headers:{
+            "Content-Type":"application/json"
+        },
+        body:JSON.stringify(patient)
+    })
+
+    let result = await response.json();
+
+    if(!response.ok){
+        res.innerHTML = `<h2 class="failure">Patient was not added due to error</h2>`;
     }else{
-        let response = await fetch(baseUrl+"/add",{
-            method:"POST",     
-            headers:{
-                "Content-Type":"application/json"
-            },
-            body:JSON.stringify(patient)
-        })
-
-        let result = await response.json();
-
-        if(!response.ok){
-            res.innerHTML = `<h2 class="failure">Patient was not added due to error</h2>`;
-        }else{
-            res.innerHTML = `<h2 class="success">Patient of name: ${patient.username} has been added</h2>`;
-        }
+        res.innerHTML = `<h2 class="success">Patient of name: ${patient.username} has been added</h2>`;
     }
 })
 }
@@ -172,7 +174,14 @@ if(validateBtn != null){
         <form id="patientForm">
             <input type="text" placeholder="Username" id="name"><br>
             <input type="date" placeholder="Date of Birth" id="dob"><br>
-            <input type="text" placeholder="Gender" id="gender"><br>
+
+            <label for="gender">Choose Gender:</label>
+            <select name="gender" id="gender">
+                <option value="Male">Male</option>
+                <option value="Female">Female</option>
+                <option value="Trans Gender">Trans Gender</option>
+            </select><br>
+
             <input type="number" placeholder="Contact Number" id="contactNo"><br>
             <button type="submit" id="addBtn">Update Patient</button>
         </form>`;
@@ -305,7 +314,7 @@ if(deletePatientBtn != null){
                 //if error occurs
                 if(!response.ok){
                     finalMsg.innerHTML = `<h2 class="failure">Error occured during deletion with status code: ${response.status}<br>
-                                    The Patient you are trying to delete is being diagnos by doctors or in facility</h2>`;
+                                    The Patient you are trying to delete is being diagnos by doctors or in infirmary</h2>`;
                     return;
                 }
                 

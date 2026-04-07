@@ -6,7 +6,7 @@ import lombok.Data;
 public class ReferralModel {
     private long id;
     private long patientId;         
-    private long facilityId;     
+    private long healthcareCenterId;     
     private long referringDoctorId;
     private long receivingDoctorId;         
     private String diagnosis;

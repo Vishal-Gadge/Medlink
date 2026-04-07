@@ -10,7 +10,7 @@ import com.danger.will.MedLink.api.entity.PatientEntity;
 import com.danger.will.MedLink.api.entity.ReferralEntity;
 import com.danger.will.MedLink.api.model.ReferralModel;
 import com.danger.will.MedLink.api.repository.DoctorRepository;
-import com.danger.will.MedLink.api.repository.FacilityRepository;
+import com.danger.will.MedLink.api.repository.HealthcareCenterRepository;
 import com.danger.will.MedLink.api.repository.PatientRepository;
 import com.danger.will.MedLink.api.repository.ReferralRepository;
 import com.danger.will.MedLink.api.service.services.ReferralService;
@@ -21,7 +21,7 @@ public class ReferralServiceImpl implements ReferralService{
     ReferralRepository referralRepository;
     PatientRepository patientRepository;
     DoctorRepository doctorRepository;
-    FacilityRepository facilityRepository;
+    HealthcareCenterRepository healthcareCenterRepository;
     
     ReferralModel tempReferralModel = new ReferralModel();
     ReferralEntity referralEntity = new ReferralEntity();
@@ -29,12 +29,12 @@ public class ReferralServiceImpl implements ReferralService{
     ReferralServiceImpl(ReferralRepository referralRepository,
                         PatientRepository patientRepository,
                         DoctorRepository doctorRepository,
-                        FacilityRepository facilityRepository){
+                        HealthcareCenterRepository healthcareCenterRepository){
 
         this.referralRepository = referralRepository;
         this.patientRepository = patientRepository;
         this.doctorRepository = doctorRepository;
-        this.facilityRepository = facilityRepository;
+        this.healthcareCenterRepository = healthcareCenterRepository;
     }
 
 
@@ -48,10 +48,10 @@ public class ReferralServiceImpl implements ReferralService{
                                                    .orElseThrow(()->new RuntimeException(
                                                         "Patient not found for given patient id")));
 
-        //manually adding facility entity in facility field of referral entity
-        referralEntity.setFacility(facilityRepository.findById(referralModel.getFacilityId())
+        //manually adding healthcareCenter entity in healthcareCenter field of referral entity
+        referralEntity.setHealthcareCenter(healthcareCenterRepository.findById(referralModel.getHealthcareCenterId())
                                                      .orElseThrow(()->new RuntimeException(
-                                                        "Facility not found for given facility id"))); 
+                                                        "HealthcareCenter not found for given healthcareCenter id"))); 
 
         //adding referring doctor
         referralEntity.setReferringDoctor(doctorRepository.findById(referralModel.getReferringDoctorId())
@@ -85,8 +85,8 @@ public class ReferralServiceImpl implements ReferralService{
         tempReferralModel.setPatientId(patientId);
 
         //short but complex
-        //manually adding facility id to referral model's field FacilityId
-        tempReferralModel.setFacilityId(referralEntity.getFacility().getId());
+        //manually adding healthcareCenter id to referral model's field HealthcareCenterId
+        tempReferralModel.setHealthcareCenterId(referralEntity.getHealthcareCenter().getId());
 
         //adding referring doctor
         tempReferralModel.setReferringDoctorId(referralEntity.getReferringDoctor().getId());
@@ -111,7 +111,7 @@ public class ReferralServiceImpl implements ReferralService{
 
             //copying other fields mainly foreign keys
             tempReferralModel2.setPatientId(referralEntity.getPatient().getId());
-            tempReferralModel2.setFacilityId(referralEntity.getFacility().getId());
+            tempReferralModel2.setHealthcareCenterId(referralEntity.getHealthcareCenter().getId());
             tempReferralModel2.setReferringDoctorId(referralEntity.getReferringDoctor().getId());
             tempReferralModel2.setReceivingDoctorId(referralEntity.getReceivingDoctor().getId());
 
@@ -150,8 +150,8 @@ public class ReferralServiceImpl implements ReferralService{
                                                     .orElseThrow(()->new RuntimeException(
                                                         "Referral not found for given id")));
 
-        //manually adding facility
-        referralEntity.setFacility(facilityRepository.findById(referralModel.getFacilityId())
+        //manually adding healthcareCenter
+        referralEntity.setHealthcareCenter(healthcareCenterRepository.findById(referralModel.getHealthcareCenterId())
                                                      .orElseThrow(()->new RuntimeException(
                                                         "Referral not found for given id")));
 

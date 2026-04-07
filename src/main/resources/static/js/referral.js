@@ -1,3 +1,4 @@
+import { isValidName } from "./utility.js";
 const baseUrl = "http://localhost:2000/api/referral";
 
 //adding referral to database
@@ -10,16 +11,19 @@ addBtn.addEventListener("click" , async (evt)=>{
 
     let referral = {
         patientId : document.querySelector("#patientId").value,
-        facilityId : document.querySelector("#facilityId").value,
+        healthcareCenterId : document.querySelector("#healthcareCenterId").value,
         referringDoctorId : document.querySelector("#refDrId").value,
         receivingDoctorId : document.querySelector("#recDrId").value,
         diagnosis : document.querySelector("#diagnosis").value,
         status : document.querySelector("#status").value
     }
 
-    if(!referral.diagnosis.trim() || !referral.status.trim() || !referral.patientId || !referral.facilityId || 
+    if(!referral.diagnosis.trim() || !referral.status.trim() || !referral.patientId || !referral.healthcareCenterId || 
                                      !referral.referringDoctorId || !referral.receivingDoctorId){
-        addRes.innerHTML = `<h2 class="failure">Facility cannot be added as fields are empty</h2>`;
+        addRes.innerHTML = `<h2 class="failure">HealthcareCenter cannot be added as fields are empty</h2>`;
+        return;
+    }else if(referral.diagnosis / 1){
+        addRes.innerHTML = `<h2 class="failure">Diagnosis should not contain numbers</h2>`;
         return;
     }
 
@@ -64,7 +68,7 @@ getAllBtn.addEventListener("click", async(evt) => {
     table.innerHTML = `<tr>
                             <th>Id</th>
                             <th>Patient Id</th>
-                            <th>Facility Id</th>
+                            <th>HealthcareCenter Id</th>
                             <th>Referring Doctor Id</th>
                             <th>Receiving Doctor Id</th>
                             <th>Diagnosis</th>
@@ -75,7 +79,7 @@ getAllBtn.addEventListener("click", async(evt) => {
         table.innerHTML += `<tr>
                                 <td>${element.id}</td>
                                 <td>${element.patientId}</td>
-                                <td>${element.facilityId}</td>
+                                <td>${element.healthcareCenterId}</td>
                                 <td>${element.referringDoctorId}</td>
                                 <td>${element.receivingDoctorId}</td>
                                 <td>${element.diagnosis}</td>
@@ -122,7 +126,7 @@ if(getIdBtn != null){
                                     <tr>
                                         <th>Id</th>
                                         <th>Patient Id</th>
-                                        <th>Facility Id</th>
+                                        <th>HealthcareCenter Id</th>
                                         <th>Referring Doctor Id</th>
                                         <th>Receiving Doctor Id</th>
                                         <th>Diagnosis</th>
@@ -131,7 +135,7 @@ if(getIdBtn != null){
                                     <tr>
                                         <td>${result.id}</td>
                                         <td>${result.patientId}</td>
-                                        <td>${result.facilityId}</td>
+                                        <td>${result.healthcareCenterId}</td>
                                         <td>${result.referringDoctorId}</td>
                                         <td>${result.receivingDoctorId}</td>
                                         <td>${result.diagnosis}</td>
@@ -188,7 +192,7 @@ if(validateBtn != null){
         updateRes.innerHTML = `
         <form id="referralForm">
             <input type="number" placeholder="Patient Id" id="updatePatientId"><br>
-            <input type="number" placeholder="Facility Id" id="updateFacilityId"><br>
+            <input type="number" placeholder="HealthcareCenter Id" id="updateHealthcareCenterId"><br>
             <input type="number" placeholder="Referring Doctor Id" id="upReferringDoctorId"><br>
             <input type="number" placeholder="Receiving Doctor Id" id="upReceivingDoctorId"><br>
             <input type="text" placeholder="Diagnosis" id="updateDiagnosis"><br>
@@ -206,7 +210,7 @@ if(validateBtn != null){
             let updatedReferral = {
                 id : refId,
                 patientId : document.querySelector("#updatePatientId").value,
-                facilityId : document.querySelector("#updateFacilityId").value,
+                healthcareCenterId : document.querySelector("#updateHealthcareCenterId").value,
                 referringDoctorId : document.querySelector("#upReferringDoctorId").value,
                 receivingDoctorId : document.querySelector("#upReceivingDoctorId").value,
                 diagnosis : document.querySelector("#updateDiagnosis").value,
@@ -216,11 +220,14 @@ if(validateBtn != null){
             const finalMsg = document.querySelector("#finalMsg");
 
             //checking if null
-            if(!updatedReferral.patientId || !updatedReferral.facilityId || !updatedReferral.referringDoctorId || 
+            if(!updatedReferral.patientId || !updatedReferral.healthcareCenterId || !updatedReferral.referringDoctorId || 
                 !updatedReferral.receivingDoctorId || !updatedReferral.diagnosis.trim() || !updatedReferral.status.trim()){
        
                         finalMsg.innerHTML = `<h2 class="failure">Kindly Enter Details to update</h2>`;
                         return;
+            }else if(referral.diagnosis / 1){
+                addRes.innerHTML = `<h2 class="failure">Diagnosis should not contain numbers</h2>`;
+                return;
             }
 
             //send data if all clear

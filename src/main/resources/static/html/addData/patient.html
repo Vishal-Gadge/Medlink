@@ -4,14 +4,27 @@
     <title>Add Patient</title>
     <link rel="stylesheet" href="/css/style.css">
 </head>
-<body>
+<style>
+    #dateOfBirth {
+        margin-top: 2px;
+    }
+</style>
+<body class="addPatient">
 
 <h1>Add Patient</h1>
 
 <form id="patientForm">
     <input type="text" placeholder="Username" id="username"><br>
+    <p id="patientDob">Date of birth</p>
     <input type="date" placeholder="Date of Birth" id="dateOfBirth"><br>
-    <input type="text" placeholder="Gender" id="gender"><br>
+
+    <label for="gender">Choose Gender:</label><br>
+    <select name="gender" id="gender">
+        <option value="Male">Male</option>
+        <option value="Female">Female</option>
+        <option value="Trans Gender">Trans Gender</option>
+    </select><br>
+
     <input type="text" placeholder="Contact Number" id="contactNumber"><br>
     <button type="submit" id="addBtn">Add Patient</button>
 </form>
@@ -20,6 +33,6 @@
     
 </div>
 
-<script src="/js/patient.js"></script>
+<script type="module" src="/js/patient.js"></script>
 </body>
 </html>

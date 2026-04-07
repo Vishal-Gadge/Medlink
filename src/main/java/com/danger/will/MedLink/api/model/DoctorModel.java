@@ -9,7 +9,7 @@ public class DoctorModel {
     private String username;
     private String password;
     private String role;
-    private Long facilityId;
+    private Long healthcareCenterId;
 }
 
 // {
@@ -18,5 +18,5 @@ public class DoctorModel {
 //     "username":"dangerArmy",
 //     "password":"12345",
 //     "role":"doctor",
-//     "facilityId":"001"
+//     "healthcareCenterId":"001"
 // }

@@ -9,8 +9,8 @@ import lombok.Data;
 
 @Data
 @Entity
-@Table(name="facilityEntity")
-public class FacilityEntity {
+@Table(name="healthcareCenterEntity")
+public class HealthcareCenterEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;

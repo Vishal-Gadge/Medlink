@@ -10,7 +10,46 @@ body {
     background-color: #81d6d6;
     color: #333;
     padding: 20px;
+    height: 100vh;
 }
+
+.index {
+    background: url("/images/index.jpg") no-repeat center/cover;
+}
+
+.create {
+    background:url("/images/create.jpg") no-repeat center/cover;
+}
+
+.addDoctor {
+    background:url("/images/addDoctor.jpg") no-repeat center/cover;
+}
+
+.addHealthcare {
+    background:url("/images/addHealthcare.jpg") no-repeat center/cover;
+}
+
+.addPatient {
+    background:url("/images/addPatient.jpg") no-repeat center/cover;
+}
+
+.addReferral {
+    background:url("/images/addReferral.jpg") no-repeat center/cover;
+}
+
+.read {
+    background: url("/images/read.jpg") no-repeat center/cover;
+}
+
+.update {
+    background: url("/images/update.jpg") no-repeat center/cover;
+}
+
+.delete {
+    background: url("/images/delete.jpg") no-repeat center/cover;
+}
+
+
 
 /* Heading */
 h1 {
@@ -85,13 +124,6 @@ button:hover {
     color: #0b6e6e;
 }
 
-/* Error messages */
-/* h2 , h3 {
-    color: #410303;
-    background-color: #cf6768;
-    padding: 5px;
-} */
-
 /* Tables */
 table {
     width: 90%;
@@ -149,4 +181,36 @@ a:hover {
     color: #410303;
     background-color: #cf6768;
     padding: 5px;
+}
+
+#patientDob {
+    margin-top: 10px;
+    font-size: 13px;
+    color: black;
+}
+
+/* In general for dropdowns */
+label {
+    font-size: 13px;
+    color: black;
+    margin-right: 10px;
+}
+
+select {
+    padding: 5px;
+    border: 1px solid #4b20af;
+    border-radius: 5px;
+    font-size: 13px;
+    margin-bottom: 5px;
+    height: 34px;
+    width: 100%;
+}
+
+.labelBox {
+    display: flex;
+    align-items: center;
+}
+
+option {
+    border: 2px solid black;
 }

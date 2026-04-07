@@ -22,9 +22,9 @@ public class DoctorEntity {
     private String password;
     private String role;
 
-    @ManyToOne                            //many doctors one facility
-    @JoinColumn(name = "facility_id")     //tells ORM to create a colunm int doctorEntity table
-    private FacilityEntity facility;      //every doctor object has facility object
+    @ManyToOne                            //many doctors one healthcareCenter
+    @JoinColumn(name = "healthcareCenter_id")     //tells ORM to create a colunm int doctorEntity table
+    private HealthcareCenterEntity healthcareCenter;      //every doctor object has healthcareCenter object
 }
 
 // {
@@ -32,5 +32,5 @@ public class DoctorEntity {
 //         "username":"DangerArmy",
 //         "password":"12345",
 //         "role":"heart surgeon",
-//         "facilityId":2
+//         "healthcareCenterId":2
 //     }

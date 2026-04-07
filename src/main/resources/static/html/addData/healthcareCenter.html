@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Add HealthcareCenter</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body class="addHealthcare">
+
+<h1>Add HealthcareCenter</h1>
+
+<form id="healthcareCenterForm">
+    <input type="text" placeholder="Name" id="name"><br>
+
+    <label for="type">Choose HealthCare Center Type:</label>
+    <select name="type" id="healthCareType">
+        <option value="Hospital">Hospital</option>
+        <option value="Clinic">Clinic</option>
+        <option value="Diagnostic Center">Diagnostic Center</option>
+        <option value="Medical College">Medical College</option>
+    </select>
+
+    <input type="text" placeholder="Location" id="location"><br>
+    <button type="submit" id="addBtn">Add HealthcareCenter</button>
+</form>
+
+<div id="addRes"></div>
+
+<script type="module" src="/js/healthcareCenter.js"></script>
+</body>
+</html>
