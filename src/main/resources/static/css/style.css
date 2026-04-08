@@ -13,8 +13,11 @@ body {
     height: 100vh;
 }
 
+
+
 .index {
     background: url("/images/index.jpg") no-repeat center/cover;
+    padding-top: 15%;
 }
 
 .create {
@@ -37,16 +40,75 @@ body {
     background:url("/images/addReferral.jpg") no-repeat center/cover;
 }
 
+
+
+
 .read {
     background: url("/images/read.jpg") no-repeat center/cover;
 }
+
+.readDoctor {
+    background: url("/images/readDoctor.jpg") no-repeat center/cover;
+}
+
+.readHealthcareCenter {
+    background: url("/images/readHealthcareCenter.jpg") no-repeat center/cover;
+}
+
+.readPatient {
+    background: url("/images/readPatient.jpg") no-repeat center/cover;
+}
+
+.readReferral {
+    background: url("/images/readReferral.jpg") no-repeat center/cover;
+}
+
+
+
+
 
 .update {
     background: url("/images/update.jpg") no-repeat center/cover;
 }
 
+.updateDoctor {
+    background: url("/images/updateDoctor.jpg") no-repeat center/cover;
+}
+
+.updateHealthcareCenter {
+    background: url("/images/updateHealthcareCenter.jpg") no-repeat center/cover;
+}
+
+.updatePatient {
+    background: url("/images/updatePatient.jpg") no-repeat center/cover;
+}
+
+.updateReferral {
+    background: url("/images/updateReferral.jpg") no-repeat center/cover;
+}
+
+
+
+
+
 .delete {
     background: url("/images/delete.jpg") no-repeat center/cover;
+}
+
+.deleteDoctor {
+    background: url("/images/deleteDoctor.jpg") no-repeat center/cover;
+}
+
+.deleteHealthcareCenter {
+    background: url("/images/deleteHealthcareCenter.jpg") no-repeat center/cover;
+}
+
+.deletePatient {
+    background: url("/images/deletePatient.jpg") no-repeat center/cover;
+}
+
+.deleteReferral {
+    background: url("/images/deleteReferal.jpg") no-repeat center/cover;
 }
 
 
@@ -56,6 +118,7 @@ h1 {
     text-align: center;
     color: #0b6e6e;
     margin-bottom: 20px;
+    font-size: 3rem;
 }
 
 /* Container for main menu */
@@ -213,4 +276,8 @@ select {
 
 option {
     border: 2px solid black;
+}
+
+.changedColor{
+    color: rgb(123 250 255);
 }
