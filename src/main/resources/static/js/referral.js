@@ -1,5 +1,5 @@
 import { isValidName } from "./utility.js";
-const baseUrl = "http://localhost:2000/api/referral";
+const baseUrl = "/api/referral";
 
 //adding referral to database
 const addBtn = document.querySelector("#addBtn");

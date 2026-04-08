@@ -1,5 +1,5 @@
 import { isValidName } from "./utility.js";
-const baseUrl = "http://localhost:2000/api/patient";
+const baseUrl = "/api/patient";
 
 //adding patient into database
 let btn = document.querySelector("#addBtn");
